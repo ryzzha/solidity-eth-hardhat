@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "typeRoots": ["./node_modules/@types", "./typechain"],
+    "baseUrl": "",
+    "paths": {
+      "*": ["node_modules/*", "typechain/*"]
+    }
+  },
+  "include": ["./tasks", "./scripts", "./typechain", "./test", "./contracts"]
+}

@@ -1,0 +1,36 @@
+{
+  "name": "hardchat-base",
+  "version": "1.0.0",
+  "description": ":)",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile && npx typechain --target ethers-v6 --out-dir ./front/typechain 'artifacts/contracts/**/*[!dbg].json'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/github.com.IraRyzha/hardchat-base.git"
+  },
+  "author": "ryzha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/github.com.IraRyzha/hardchat-base/issues"
+  },
+  "homepage": "https://github.com/github.com.IraRyzha/hardchat-base#readme",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.8",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@typechain/ethers-v6": "^0.5.1",
+    "@typechain/hardhat": "^9.1.0",
+    "@types/node": "^22.9.1",
+    "ethers": "^6.13.4",
+    "hardhat": "^2.22.16",
+    "hardhat-deploy": "^0.14.0",
+    "ts-node": "^10.9.2",
+    "typechain": "^8.3.2",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.1.0",
+    "solidity-coverage": "^0.8.14"
+  }
+}

@@ -2,8 +2,10 @@ import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomicfoundation/hardhat-ethers";
 import "@typechain/hardhat";
+import "@openzeppelin/hardhat-upgrades";
 import "hardhat-deploy";
 import "./tasks/simple-task";
+
 
 const config: HardhatUserConfig = {
   solidity: "0.8.27",

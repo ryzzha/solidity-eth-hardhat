@@ -5,7 +5,7 @@
 //   ContractTransactionReceipt,
 //   ContractRunner,
 // } from "ethers";
-// import { AuctionEngine } from "../typechain-types";
+// import { AuctionEngine } from "../typechain";
 
 // describe("AuctionEngine", function () {
 //   let owner: any;

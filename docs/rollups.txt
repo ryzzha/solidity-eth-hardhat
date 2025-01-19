@@ -1,0 +1,11 @@
+Layer 2 Rollups process transactions off-chain to reduce Layer 1 congestion, aggregate them into a batch, 
+and generate a cryptographic proof (e.g., zk-SNARK or Optimistic Fraud Proof) that validates the correctness of these transactions. 
+The proof, along with the new state root (representing the updated state), is sent to Layer 1. Layer 1 verifies the proof without executing the transactions 
+and updates its stored state root if the proof is valid. This mechanism allows Layer 2 to scale efficiently while inheriting the security of Layer 1.
+
+
+
+
+
+
+

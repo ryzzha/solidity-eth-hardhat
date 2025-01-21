@@ -24,6 +24,17 @@ describe("Payments", function () {
     const signatureForReceiver = await owner.signMessage(getBytes(hashForReceiver));
     const signatureForUser = await owner.signMessage(getBytes(hashForUser));
 
+    console.log("sc addrs: " + payments.target);
+    console.log("owner addrs: " + owner.address);
+    console.log("user addrs: " + user.address);
+
+    console.log("hashForReceiver in hex: ");
+    console.log(hashForReceiver);
+    console.log("hashForReceiver in bytes: ");
+    console.log(getBytes(hashForReceiver));
+    console.log("signatureForReceiver: ");
+    console.log(signatureForReceiver);
+
     const tx1 = await payments.connect(receiver).claim(amount, nonce, signatureForReceiver);
     await tx1.wait();
 

@@ -1,66 +1,39 @@
-// import { time, loadFixture, anyValue, ethers, expect } from "./setup";
-// import { parseEther, formatEther } from "ethers";
+import { time, loadFixture, anyValue, ethers, expect } from "./setup";
+import { parseEther, formatEther, keccak256, getBytes } from "ethers";
 
-// describe("Payments", function () {
-//   async function deploy() {
-//     const [user1, user2] = await ethers.getSigners();
+describe("Payments", function () {
+  async function deploy() {
+    const [owner, receiver, user] = await ethers.getSigners();
 
-//     const Factory = await ethers.getContractFactory("Payments");
-//     // console.log(Factory);
-//     const payments = await Factory.deploy();
-//     // console.log(payments);
-//     await payments.waitForDeployment();
+    const Factory = await ethers.getContractFactory("Payments");
+    const payments = await Factory.deploy({ value: parseEther("100") });
+    await payments.waitForDeployment();
 
-//     return { user1, user2, payments };
-//   }
+    return { owner, receiver, user, payments };
+  }
 
-//   it("should be deployed", async function () {
-//     const { user1, user2, payments } = await loadFixture(deploy);
+  it("should be deployed", async function () {
+    const { owner, receiver, user, payments } = await loadFixture(deploy);
 
-//     expect(payments.target).to.be.properAddress;
-//     // console.log(await payments.getAddress());
-//     // console.log(user1.address);
-//   });
+    const amount = parseEther("35");
+    const nonce = 1;
 
-//   it("should have 0 ethers on balance", async function () {
-//     const { payments } = await loadFixture(deploy);
+    const hashForReceiver = ethers.solidityPackedKeccak256(["address", "uint", "uint", "address"], [receiver.address, amount, nonce, payments.target]);
+    const hashForUser = ethers.solidityPackedKeccak256(["address", "uint", "uint", "address"], [user.address, parseEther("12"), 2, payments.target]);
 
-//     // const balance = await ethers.provider.getBalance(payments.target);
-//     const balance = await payments.currentBalance();
-//     expect(balance).to.eq(0);
-//   });
+    const signatureForReceiver = await owner.signMessage(getBytes(hashForReceiver));
+    const signatureForUser = await owner.signMessage(getBytes(hashForUser));
 
-//   it("should be possible to send funds", async function () {
-//     const { user1, user2, payments } = await loadFixture(deploy);
+    const tx1 = await payments.connect(receiver).claim(amount, nonce, signatureForReceiver);
+    await tx1.wait();
 
-//     const sum = parseEther("10");
-//     const msg = "for wealthy life";
+    await expect(payments.connect(receiver).claim(amount, nonce, signatureForReceiver)).to.revertedWith('already claim');
 
-//     // console.log(await ethers.provider.getBalance(user1.address));
-//     const tx = await payments.connect(user2).pay(msg, { value: sum });
-//     // console.log(await ethers.provider.getBalance(user1.address));
+    await expect(payments.connect(user).claim(amount, 2, signatureForReceiver)).to.revertedWith("wrong sign:(");
 
-//     await tx.wait();
+    const tx2 = await payments.connect(user).claim(parseEther("12"), 2, signatureForUser);
+    await tx2.wait();
 
-//     // console.log(tx);
-
-//     const currentBlock = await ethers.provider.getBlock(
-//       await ethers.provider.getBlockNumber()
-//     );
-
-//     // console.log(currentBlock);
-
-//     const contractBal = await ethers.provider.getBalance(payments.target);
-//     console.log("contractBal in wei: " + contractBal);
-//     console.log("contractBal in ether: " + formatEther(contractBal.toString()));
-
-//     await expect(tx).to.changeEtherBalance(user2, -sum);
-
-//     const newPayment = await payments.getPayment(user2.address, 0);
-
-//     expect(newPayment.amount).to.eq(sum);
-//     expect(newPayment.timestamp).to.eq(currentBlock?.timestamp);
-//     expect(newPayment.from).to.eq(user2.address);
-//     expect(newPayment.message).to.eq(msg);
-//   });
-// });
+  });
+ 
+});

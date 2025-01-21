@@ -3,41 +3,47 @@
 pragma solidity ^0.8.27;
 
 contract Payments {
-    struct Payment {
-        uint amount;
-        uint timestamp;
-        address from;
-        string message;
+    address owner;
+
+    mapping(uint => bool) nonces;
+
+    constructor() payable {
+        require(msg.value > 1, "need some value");
+        owner = msg.sender;
     }
 
-    struct Balance {
-        uint totalPayments;
-        mapping(uint => Payment) payments;
+    function claim(uint amount, uint nonce, bytes memory signature) external {
+        require(!nonces[nonce], "already claim");
+
+        nonces[nonce] = true;
+
+        bytes32 message = withPrefix(keccak256(abi.encodePacked(msg.sender, amount, nonce, address(this))));
+
+        require(recoverSigner(message, signature) == owner, "wrong sign:(");
+
+        payable(msg.sender).transfer(amount);
     }
 
-    mapping(address => Balance) public balances;
+    function recoverSigner(bytes32 message, bytes memory signature) internal pure returns(address) {
+        (uint8 v, bytes32 r, bytes32 s) = splitSignature(signature);
 
-    function currentBalance() public view returns(uint) {
-        return address(this).balance;
+        return ecrecover(message, v, r, s);
     }
 
-    function getPayment(address _addr, uint _index) public view returns(Payment memory) {
-        return balances[_addr].payments[_index];
+    function splitSignature(bytes memory signature) internal pure returns(uint8 v, bytes32 r, bytes32 s) {
+        require(signature.length == 65, "sign length must be 65");
+
+        assembly {
+            r := mload(add(signature, 32))
+
+            s := mload(add(signature, 64))
+
+            v := byte(0, mload(add(signature, 96)))
+        }
+
+        return (v, r, s);
     }
-
-    function pay(string memory message) public payable returns(uint) {
-        uint paymentNum = balances[msg.sender].totalPayments;
-        balances[msg.sender].totalPayments++;
-
-        Payment memory newPayment = Payment(
-            msg.value,
-            block.timestamp,
-            msg.sender,
-            message
-        );
-
-        balances[msg.sender].payments[paymentNum] = newPayment;
-
-        return msg.value;
+    function withPrefix(bytes32 hash) internal pure returns(bytes32) {
+        return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
     }
 }

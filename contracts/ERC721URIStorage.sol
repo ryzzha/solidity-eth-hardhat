@@ -1,5 +1,5 @@
-// //SPDX-License-Identifier: MIT
-// pragma solidity ^0.8.0;
+//SPDX-License-Identifier: MIT
+pragma solidity ^0.8.27;
 // import "./ERC721.sol";
 // abstract contract ERC721URIStorage is ERC721 {
 //     mapping(uint => string) private _tokenURIs;

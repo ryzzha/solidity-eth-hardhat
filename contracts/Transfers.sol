@@ -7,7 +7,7 @@ import "hardhat/console.sol";
 contract Transfers {
     struct Transfer {
         uint amount;
-        uint timestamp;
+        uint timestamp; 
         address sender;
     }
 

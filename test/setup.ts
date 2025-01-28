@@ -7,5 +7,6 @@ import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 import { ethers } from "hardhat";
 import { expect } from "chai";
 import "@nomicfoundation/hardhat-chai-matchers";
+import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 
-export { time, loadFixture, anyValue, ethers, expect };
+export { time, loadFixture, anyValue, ethers, expect, SignerWithAddress };

@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.20;
 
-import {IERC20} from "./IERC20.sol";
+import {IERC20} from "../erc20/IERC20.sol";
 import {IERC20Metadata} from "./IERC20Metadata.sol";
 // import {Context} from "../Context.sol";
 import {IERC20Errors} from "./draft-IERC20.sol";
@@ -69,7 +69,7 @@ abstract contract ERC20 is IERC20, IERC20Metadata, IERC20Errors {
     function _transfer(address from, address to, uint256 value) internal {
         if (from == address(0)) {
             revert ERC20InvalidSender(address(0));
-        }
+        } 
         if (to == address(0)) {
             revert ERC20InvalidReceiver(address(0));
         }

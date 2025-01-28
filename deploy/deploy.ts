@@ -9,7 +9,7 @@ import { Deployer } from "@matterlabs/hardhat-zksync-deploy";
 // npx hardhat deploy-zksync --script deploy --network zkTestnet
 
 export default async function (hre: HardhatRuntimeEnvironment) {
-    const PRIVATE_KEY = process.env.ZKS_PRIVATE_KEY;
+    const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
     if (!PRIVATE_KEY) {
         throw new Error("Please set ZKS_PRIVATE_KEY in the .env file");

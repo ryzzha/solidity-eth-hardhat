@@ -26,7 +26,7 @@ contract Payments {
 
     function recoverSigner(bytes32 message, bytes memory signature) internal pure returns(address) {
         (uint8 v, bytes32 r, bytes32 s) = splitSignature(signature);
-
+ 
         return ecrecover(message, v, r, s);
     }
 

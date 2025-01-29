@@ -91,7 +91,7 @@ async function signERC2612Permit(
 
 describe("MyToken", function() {
     async function deploy() {
-      const [ user1, user2 ] = await ethers.getSigners();
+      const [ owner, spender ] = await ethers.getSigners();
   
       const Factory = await ethers.getContractFactory("MyToken");
       const token: MyToken = await Factory.deploy();
@@ -99,35 +99,33 @@ describe("MyToken", function() {
       const PFactory = await ethers.getContractFactory("Proxy");
       const proxy: Proxy = await PFactory.deploy();
   
-      return { token, proxy, user1, user2 }
+      return { token, proxy, owner, spender }
     }
   
     it("should permit", async function() {
-      const { token, proxy, user1, user2 } = await loadFixture(deploy);
+      const { token, proxy, owner, spender } = await loadFixture(deploy);
   
       const tokenAddr = token.target.toString();
-      const owner = user1.address;
-      const spender = user2.address;
       const amount = 100;
       const deadline = Math.floor(Date.now() / 1000) + 1000;
       const nonce = 0;
   
       const result = await signERC2612Permit(
         tokenAddr,
-        owner,
-        spender,
+        owner.address.toString(),
+        spender.address.toString(),
         amount,
         deadline,
         nonce,
-        user1
+        owner
       );
   
       console.log(result);
   
-      const tx = await proxy.connect(user2).doSend(
+      const tx = await proxy.connect(spender).doSend(
         tokenAddr,
-        owner,
-        spender,
+        owner.address,
+        spender.address,
         amount,
         deadline,
         result.v,
@@ -140,10 +138,10 @@ describe("MyToken", function() {
   
       console.log("ALLOWANCE BEFORE", await token.allowance(owner, spender));
   
-      const transferTx = await token.connect(user2).transferFrom(owner, spender, 10);
+      const transferTx = await token.connect(spender).transferFrom(owner, spender, 85);
       await transferTx.wait();
   
-      await expect(transferTx).to.changeTokenBalance(token, user2, 10);
+      await expect(transferTx).to.changeTokenBalance(token, spender, 85);
   
       console.log("ALLOWANCE AFTER", await token.allowance(owner, spender));
     });

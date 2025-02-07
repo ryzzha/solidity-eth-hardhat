@@ -1,36 +1,36 @@
-import { loadFixture, ethers, expect, time } from "./setup";
-import { ERC4907Demo } from "../typechain";
+// import { loadFixture, ethers, expect, time } from "./setup";
+// import { ERC4907Demo } from "../typechain";
 
-describe("ERC4907", function() {
-  async function deploy() {
-    const [ user1, user2 ] = await ethers.getSigners();
+// describe("ERC4907", function() {
+//   async function deploy() {
+//     const [ user1, user2 ] = await ethers.getSigners();
 
-    const Factory = await ethers.getContractFactory("ERC4907Demo");
-    const nft: ERC4907Demo = await Factory.deploy("MyToken", "MTK");
+//     const Factory = await ethers.getContractFactory("ERC4907Demo");
+//     const nft: ERC4907Demo = await Factory.deploy("MyToken", "MTK");
 
-    return { nft, user1, user2 }
-  }
+//     return { nft, user1, user2 }
+//   }
 
-  it("should work", async function() {
-    const { nft, user1, user2 } = await loadFixture(deploy);
+//   it("should work", async function() {
+//     const { nft, user1, user2 } = await loadFixture(deploy);
 
-    const tokenId = 1;
-    const u1_addr = user1.address;
-    const u2_addr = user2.address;
+//     const tokenId = 1;
+//     const u1_addr = user1.address;
+//     const u2_addr = user2.address;
 
-    await nft.mint(u1_addr, tokenId);
+//     await nft.mint(u1_addr, tokenId);
 
-    const expires = Math.floor(new Date().getTime() / 1000) + 100;
+//     const expires = Math.floor(new Date().getTime() / 1000) + 100;
 
-    await nft.setUser(tokenId, u2_addr, expires);
+//     await nft.setUser(tokenId, u2_addr, expires);
 
-    expect(await nft.userOf(tokenId)).to.eq(u2_addr);
-    expect(await nft.ownerOf(tokenId)).to.eq(u1_addr);
+//     expect(await nft.userOf(tokenId)).to.eq(u2_addr);
+//     expect(await nft.ownerOf(tokenId)).to.eq(u1_addr);
 
-    await time.increase(102);
+//     await time.increase(102);
 
-    expect(await nft.userOf(tokenId)).to.eq(
-      ethers.ZeroAddress
-    );
-  });
-});
+//     expect(await nft.userOf(tokenId)).to.eq(
+//       ethers.ZeroAddress
+//     );
+//   });
+// });

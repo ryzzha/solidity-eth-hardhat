@@ -50,7 +50,7 @@ contract ERC721 is ERC165, IERC721, IERC721Metadata {
         return _symbol;
     }
 
-    function tokenURI(uint256 tokenId) external view virtual returns (string memory) {
+    function tokenURI(uint256 tokenId) public view virtual returns (string memory) {
         _requireMinted(tokenId);
 
         string memory baseURI = _baseURI(); // ipfs:// https://example.com/nfts/
@@ -181,6 +181,14 @@ contract ERC721 is ERC165, IERC721, IERC721Metadata {
         emit Transfer(from, to, tokenId);
 
         _afterTokenTransfer(from, to, tokenId, 1);
+    }
+
+    function _burn(uint256 tokenId) internal virtual {
+        address owner = ownerOf(tokenId);
+        _balances[owner] -= 1;
+        delete _owners[tokenId];
+
+        emit Transfer(owner, address(0), tokenId);
     }
 
     function _approve(address to, uint256 tokenId) internal virtual {

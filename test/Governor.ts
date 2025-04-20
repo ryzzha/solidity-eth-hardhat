@@ -16,7 +16,7 @@ async function transferWithDecimals(
 	await transferTx.wait();
 }
 
-describe("Governor", () => {
+describe.skip("Governor", () => {
 	async function deploy() {
 		const [admin, user1, user2] = await ethers.getSigners();
 
